@@ -53,6 +53,7 @@ public class BDPlayerListener extends PlayerListener {
             type = md.toString();
         }
 
+        plugin.log(player.getLocation().toString() + " facing " + LocationUtil.getDirection(player.getLocation()));
         plugin.log(player.getName() + " " + event.getAction() + " " + type + " at " + block.getLocation() + " on " + face);
 
         if (block.isBlockPowered()) {

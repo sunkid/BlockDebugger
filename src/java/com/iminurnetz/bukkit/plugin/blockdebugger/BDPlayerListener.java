@@ -33,6 +33,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.material.MaterialData;
 
+import com.iminurnetz.bukkit.util.LocationUtil;
+
 public class BDPlayerListener extends PlayerListener {
 
     private final BlockDebuggerPlugin plugin;

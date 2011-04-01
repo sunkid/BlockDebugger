@@ -1,6 +1,6 @@
-BlockDebugger v0.1
+BlockDebugger v0.3
 
-2011/04/01 13:59
+2011/04/01 14:03
 
 INSTALL and UPGRADE
 

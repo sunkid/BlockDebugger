@@ -121,10 +121,17 @@ public class LocationUtil {
 	 * @param loc the location
 	 * @return a BlockFace corresponding to the Location's yaw
 	 */
-	public BlockFace getDirection(Location loc) {
-	    int degrees = Math.abs(365%((int)loc.getYaw()));
-	    int n = (int) Math.round(degrees/11.25);
+	public static BlockFace getDirection(Location loc) {
 	    
+	    int degrees = (int) loc.getYaw()%360;
+        if (degrees < 0) {
+            degrees += 360;
+        }
+        
+	    int n = (int) Math.round(degrees/22.5);
+	    
+	    
+	    System.err.println(n + " " + degrees);
 	    switch (n) {
 	    case 0:
 	    default:

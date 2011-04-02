@@ -47,6 +47,10 @@ public class BDPlayerListener extends PlayerListener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
+        
+        if (block == null)
+            return;
+        
         BlockFace face = event.getBlockFace();
         Material m = block.getType();
         String type = m + "(" + block.getData() + ")";

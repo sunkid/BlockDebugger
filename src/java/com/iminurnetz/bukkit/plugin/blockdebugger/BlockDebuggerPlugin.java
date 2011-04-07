@@ -23,6 +23,8 @@
  */
 package com.iminurnetz.bukkit.plugin.blockdebugger;
 
+import java.util.logging.Level;
+
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -46,22 +48,26 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
         PluginManager pm = getServer().getPluginManager();
         for (Type t : Type.values()) {
             Category c = t.getCategory();
-            switch (c) {
-            case PLAYER:
-                pm.registerEvent(t, new BDPlayerListener(this), Priority.Monitor, this);
-                break;
-            case BLOCK:
-                pm.registerEvent(t, new BDBlockListener(this), Priority.Monitor, this);
-                break;
-            case LIVING_ENTITY:
-                pm.registerEvent(t, new BDEntityListener(this), Priority.Monitor, this);
-                break;
-            case VEHICLE:
-                break;
-            case SERVER:
-                break;
-            case WORLD:
-                break;
+            try {
+                switch (c) {
+                case PLAYER:
+                    pm.registerEvent(t, new BDPlayerListener(this), Priority.Monitor, this);
+                    break;
+                case BLOCK:
+                    pm.registerEvent(t, new BDBlockListener(this), Priority.Monitor, this);
+                    break;
+                case LIVING_ENTITY:
+                    pm.registerEvent(t, new BDEntityListener(this), Priority.Monitor, this);
+                    break;
+                case VEHICLE:
+                    break;
+                case SERVER:
+                    break;
+                case WORLD:
+                    break;
+                }
+            } catch (Exception e) {
+                log(Level.INFO, t.name() + " is not supported!", e);
             }
         }
     }
@@ -110,6 +116,8 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
         } else if (command.getName().equalsIgnoreCase("focus")) {
             toggleFocus();
             this.currentPlayer = player;
+        } else if (command.getName().equalsIgnoreCase("heal")) {
+            player.setHealth(20);
         }
         
         return true;
@@ -117,16 +125,24 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
     
     private Player currentPlayer;
     private boolean focused = false;
+    
+    private final double FOCUS_DISTANCE = 20D;
+    
     private void toggleFocus() {
         focused = !focused;
     }
     
     protected void log(Location loc, String msg) {
-        if (currentPlayer != null && focused) {
-            Location pLoc = currentPlayer.getLocation();
-            if (LocationUtil.distance(loc, pLoc) < FOCUS_DISTANCE) {
-                log(msg);
+        if (focused) {
+            if (currentPlayer != null) {
+                Location pLoc = currentPlayer.getLocation();
+                if (LocationUtil.distance(loc, pLoc) < FOCUS_DISTANCE) {
+                    Thread.dumpStack();
+                    log(msg);
+                }
             }
+        } else {
+            log(msg);
         }
     }
 }

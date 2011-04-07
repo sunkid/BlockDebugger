@@ -29,3 +29,9 @@ commands:
     get:
         description: get an item
         usage: /get <item> [n]
+    focus:
+        description: limit certain log messages to radius around player
+        usage: /focus (toggles between focussed and unfocussed)
+    heal:
+        description: heal
+        usage: /heal

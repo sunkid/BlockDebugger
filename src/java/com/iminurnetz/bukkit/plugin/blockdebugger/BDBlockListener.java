@@ -13,13 +13,11 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
-import com.iminurnetz.bukkit.plugin.BukkitPlugin;
-
 public class BDBlockListener extends BlockListener {
 
-    private final BukkitPlugin plugin;
+    private final BlockDebuggerPlugin plugin;
 
-    public BDBlockListener(BukkitPlugin plugin) {
+    public BDBlockListener(BlockDebuggerPlugin plugin) {
         this.plugin = plugin;
     }
 

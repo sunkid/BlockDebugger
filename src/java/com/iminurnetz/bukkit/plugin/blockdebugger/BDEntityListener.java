@@ -10,13 +10,11 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-import com.iminurnetz.bukkit.plugin.BukkitPlugin;
-
 public class BDEntityListener extends EntityListener {
 
-    private final BukkitPlugin plugin;
+    private final BlockDebuggerPlugin plugin;
 
-    public BDEntityListener(BukkitPlugin plugin) {
+    public BDEntityListener(BlockDebuggerPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -30,7 +28,7 @@ public class BDEntityListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        plugin.log(event.getEntity().toString() + " damaged by " + event.getCause() + " for " + event.getDamage());
+        plugin.log(event.getEntity().getLocation(), event.getEntity().toString() + (event.isCancelled() ? " not" : "") + " damaged by " + event.toString() + "(" + event.getCause() + ") for " + event.getDamage());
     }
 
     @Override

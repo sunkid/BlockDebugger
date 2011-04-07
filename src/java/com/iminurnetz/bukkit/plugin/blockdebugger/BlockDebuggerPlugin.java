@@ -23,9 +23,11 @@
  */
 package com.iminurnetz.bukkit.plugin.blockdebugger;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Category;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.inventory.ItemStack;
@@ -34,6 +36,7 @@ import org.bukkit.plugin.PluginManager;
 import com.iminurnetz.bukkit.plugin.BukkitPlugin;
 import com.iminurnetz.bukkit.plugin.util.MessageUtils;
 import com.iminurnetz.bukkit.util.Item;
+import com.iminurnetz.bukkit.util.LocationUtil;
 import com.iminurnetz.util.StringUtils;
 
 public class BlockDebuggerPlugin extends BukkitPlugin {
@@ -41,7 +44,26 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
     @Override
     public void enablePlugin() throws Exception {
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.PLAYER_INTERACT, new BDPlayerListener(this), Priority.Monitor, this);
+        for (Type t : Type.values()) {
+            Category c = t.getCategory();
+            switch (c) {
+            case PLAYER:
+                pm.registerEvent(t, new BDPlayerListener(this), Priority.Monitor, this);
+                break;
+            case BLOCK:
+                pm.registerEvent(t, new BDBlockListener(this), Priority.Monitor, this);
+                break;
+            case LIVING_ENTITY:
+                pm.registerEvent(t, new BDEntityListener(this), Priority.Monitor, this);
+                break;
+            case VEHICLE:
+                break;
+            case SERVER:
+                break;
+            case WORLD:
+                break;
+            }
+        }
     }
 
     @Override
@@ -85,7 +107,26 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
             
             ItemStack stack = new ItemStack(item.getMaterial(), n, (short) 0, d);
             player.getWorld().dropItemNaturally(player.getLocation(), stack);
+        } else if (command.getName().equalsIgnoreCase("focus")) {
+            toggleFocus();
+            this.currentPlayer = player;
         }
+        
         return true;
+    }
+    
+    private Player currentPlayer;
+    private boolean focused = false;
+    private void toggleFocus() {
+        focused = !focused;
+    }
+    
+    protected void log(Location loc, String msg) {
+        if (currentPlayer != null && focused) {
+            Location pLoc = currentPlayer.getLocation();
+            if (LocationUtil.distance(loc, pLoc) < FOCUS_DISTANCE) {
+                log(msg);
+            }
+        }
     }
 }

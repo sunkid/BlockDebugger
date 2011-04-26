@@ -37,6 +37,7 @@ import org.bukkit.plugin.PluginManager;
 
 import com.iminurnetz.bukkit.plugin.BukkitPlugin;
 import com.iminurnetz.bukkit.plugin.util.MessageUtils;
+import com.iminurnetz.bukkit.util.InventoryUtil;
 import com.iminurnetz.bukkit.util.Item;
 import com.iminurnetz.bukkit.util.LocationUtil;
 import com.iminurnetz.util.StringUtils;
@@ -97,7 +98,7 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
                     // ignored
                 }
                 
-                itemString = itemString.replace(" " + n, "");
+                itemString = itemString.replace(" " + n, ":" + n);
             }
             
             try {
@@ -106,13 +107,7 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
                 return false;
             }
             
-            byte d = 0;
-            if (item.getData() != null) {
-                d = item.getData().getData();
-            }
-            
-            ItemStack stack = new ItemStack(item.getMaterial(), n, (short) 0, d);
-            player.getWorld().dropItemNaturally(player.getLocation(), stack);
+            InventoryUtil.giveItems(player, item.getStack());
         } else if (command.getName().equalsIgnoreCase("focus")) {
             toggleFocus();
             this.currentPlayer = player;
@@ -137,7 +132,6 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
             if (currentPlayer != null) {
                 Location pLoc = currentPlayer.getLocation();
                 if (LocationUtil.distance(loc, pLoc) < FOCUS_DISTANCE) {
-                    Thread.dumpStack();
                     log(msg);
                 }
             }

@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -115,8 +116,12 @@ public class InventoryUtil {
 	 * @return the second part of the large chest or null if there isn't one
 	 */
     public static Chest getNeighborChest(Chest chest) {
+        return getNeighborChest(chest.getBlock());
+    }
+    
+    public static Chest getNeighborChest(Block block) {
         for (BlockFace face : Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST)) {
-            BlockState state = chest.getBlock().getRelative(face).getState();
+            BlockState state = block.getRelative(face).getState();
             if (state instanceof Chest) {
                 return (Chest) state;            
             }
@@ -132,6 +137,9 @@ public class InventoryUtil {
      */
     public static List<ItemStack> remove(Player player, HashMap<Material, Integer> items) {
         ArrayList<ItemStack> stuff = new ArrayList<ItemStack>();
+        if (items == null) {
+            return stuff;
+        }
         for (Material m : items.keySet()) {
             ItemStack stack = MaterialUtils.getStack(m, items.get(m));
             stuff.add(stack);
@@ -146,8 +154,12 @@ public class InventoryUtil {
      * @param items a list of ItemStacks to be removed
      * @return a list of items that were not removed
      */    
-    public static List<ItemStack> remove(Player player, List<ItemStack> items) {
+    public static List<ItemStack> remove(Player player, List<ItemStack> items) {        
         ArrayList<ItemStack> notRemoved = new ArrayList<ItemStack>();
+        if (items == null) {
+            return notRemoved;
+        }
+        
         HashMap<Material, Integer> tmp = new HashMap<Material, Integer>();
         int slot, toBeRemoved, n;
         PlayerInventory inventory = player.getInventory();

@@ -32,10 +32,13 @@ public class SerializableItemStack implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final String material;
-    private final short damage;
-    private final int amount;
-    private final byte data;
+    private String material;
+    private short damage;
+    private int amount;
+    private byte data;
+    
+    public SerializableItemStack() {
+    }
 
     public SerializableItemStack(ItemStack stack) {
         this.material = stack.getType().name();
@@ -75,5 +78,21 @@ public class SerializableItemStack implements Serializable {
 
     public byte getData() {
         return data;
+    }
+    
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
+    public void setDamage(short damage) {
+        this.damage = damage;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setData(byte data) {
+        this.data = data;
     }
 }

@@ -1,10 +1,10 @@
-BlockDebugger 0.0.1
+${project.name} ${project.version}
 
 INSTALL and UPGRADE
 
 1. Copy the included jar file to your server's plugin directory
 2. Reload your server
-3. Change any configuration in plugins/BlockDebugger/config.yml as neccessary
+3. Change any configuration in plugins/${project.name}/config.yml as neccessary
 4. Reload your server
 
 LICENSING

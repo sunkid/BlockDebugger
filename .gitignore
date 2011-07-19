@@ -1,6 +1,3 @@
 .classpath
 .project
 .settings
-dist/
-release/*.zip
-src/resources/plugin.yml

@@ -48,18 +48,22 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
     @Override
     public void enablePlugin() throws Exception {
         PluginManager pm = getServer().getPluginManager();
+        BDPlayerListener pl = new BDPlayerListener(this);
+        BDBlockListener bl = new BDBlockListener(this);
+        BDEntityListener el = new BDEntityListener(this);
+        
         for (Type t : Type.values()) {
             Category c = t.getCategory();
             try {
                 switch (c) {
                 case PLAYER:
-                    pm.registerEvent(t, new BDPlayerListener(this), Priority.Monitor, this);
+                    pm.registerEvent(t, pl, Priority.Monitor, this);
                     break;
                 case BLOCK:
-                    pm.registerEvent(t, new BDBlockListener(this), Priority.Monitor, this);
+                    pm.registerEvent(t, bl, Priority.Monitor, this);
                     break;
                 case LIVING_ENTITY:
-                    pm.registerEvent(t, new BDEntityListener(this), Priority.Monitor, this);
+                    pm.registerEvent(t, el, Priority.Monitor, this);
                     break;
                 case VEHICLE:
                     break;
@@ -143,6 +147,17 @@ public class BlockDebuggerPlugin extends BukkitPlugin {
             }
         } else {
             log(msg);
+        }
+    }
+
+    public void dumpStack() {
+        boolean first = true;
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            if (first) {
+                first = false;
+                continue;
+            }
+            log(element.getClassName() + "(" + element.getFileName() + ":" + element.getLineNumber() + ")");
         }
     }
 }

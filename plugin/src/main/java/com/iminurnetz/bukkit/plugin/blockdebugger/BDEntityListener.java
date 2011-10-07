@@ -25,6 +25,7 @@ package com.iminurnetz.bukkit.plugin.blockdebugger;
 
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -51,7 +52,12 @@ public class BDEntityListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        plugin.log(event.getEntity().getLocation(), event.getEntity().toString() + (event.isCancelled() ? " not" : "") + " damaged by " + event.toString() + "(" + event.getCause() + ") for " + event.getDamage());
+        /* if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+            plugin.log(e.getEntity().toString() + (event.isCancelled() ? " not" : "") + " damaged by " + event.toString() + "(" + event.getCause() + ", " + e.getDamager().toString() + ") for " + event.getDamage());
+        } else {
+            plugin.log(event.getEntity().toString() + (event.isCancelled() ? " not" : "") + " damaged by " + event.toString() + "(" + event.getCause() + ") for " + event.getDamage());
+        } */
     }
 
     @Override

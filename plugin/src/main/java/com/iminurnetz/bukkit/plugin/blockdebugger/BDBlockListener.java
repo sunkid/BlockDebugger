@@ -66,10 +66,13 @@ public class BDBlockListener extends BlockListener {
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
+        plugin.log(event.getPlayer() + " " + event.getEventName() + " " + event.getBlock().getState().getData());
+        plugin.dumpStack();
     }
 
     @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        plugin.log("RedstoneEvent (" + event.getOldCurrent() + " -> " + event.getNewCurrent() + ") at: " + event.getBlock());
     }
 
     @Override
@@ -86,6 +89,7 @@ public class BDBlockListener extends BlockListener {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+        plugin.log("Block " + (event.isCancelled() ? "not " : "") + "broken: " + event.getBlock());
     }
 
 }

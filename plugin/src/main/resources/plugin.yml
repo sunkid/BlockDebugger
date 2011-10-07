@@ -37,4 +37,4 @@ commands:
         usage: /heal
     tone:
         description: play a note
-        usage: /note <byte>
+        usage: /note <byte>        

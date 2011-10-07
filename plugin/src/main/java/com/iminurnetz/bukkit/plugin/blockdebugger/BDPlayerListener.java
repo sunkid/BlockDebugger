@@ -24,23 +24,20 @@
 package com.iminurnetz.bukkit.plugin.blockdebugger;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 
-import org.bukkit.Instrument;
 import org.bukkit.Material;
-import org.bukkit.Note;
-import org.bukkit.Note.Tone;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -56,7 +53,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.material.MaterialData;
 
-import com.iminurnetz.bukkit.plugin.util.MessageUtils;
 import com.iminurnetz.bukkit.util.LocationUtil;
 
 public class BDPlayerListener extends PlayerListener {
@@ -75,64 +71,6 @@ public class BDPlayerListener extends PlayerListener {
 
         if (block == null)
             return;
-
-        if (block.getType() == Material.NOTE_BLOCK && event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            
-            Thread t = new Thread(new Runnable() {
-                public void run() {
-                    for (byte n = 0; n <= 24; n++) {
-                        Note note = new Note(n);
-                        MessageUtils.send(player, "Note is " + note.getTone() + (note.isSharped() ? "#" : ""));
-                        player.playNote(block.getLocation(), Instrument.PIANO, note);
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-
-                    byte b = 0;
-                    for (byte octave = 0; octave < 3; octave++) {
-                        for (Tone t : Tone.values()) {
-                            boolean sharp = false;
-                            for (int n = 0; n < 2; n++) {
-                                try {
-                                    Note note = new Note(octave, t, sharp);
-                                    MessageUtils.send(player, "Note is " + note.getTone() + (note.isSharped() ? "#" : "") + note.getOctave() + " v. " + t + (sharp ? "#" : "") + octave);
-                                    player.playNote(block.getLocation(), Instrument.PIANO, note);
-                                    try {
-                                        Thread.sleep(100);
-                                    } catch (InterruptedException e) {
-                                        // TODO Auto-generated catch block
-                                        e.printStackTrace();
-                                    }
-
-                                    note = new Note(b++);
-
-                                    MessageUtils.send(player, "Note is " + note.getTone() + (note.isSharped() ? "#" : ""));
-                                    player.playNote(block.getLocation(), Instrument.PIANO, note);
-                                    try {
-                                        Thread.sleep(200);
-                                    } catch (InterruptedException e) {
-                                        // TODO Auto-generated catch block
-                                        e.printStackTrace();
-                                    }
-                                } catch (Exception e) {
-                                    plugin.log(Level.SEVERE, "error: " + t + (sharp ? "#" : "") + octave, e);
-                                }
-
-                                sharp = !sharp;
-                            }
-                        }
-                    }
-
-                }
-            });
-            t.start();
-            event.setCancelled(true);
-            return;
-        }
 
         BlockFace face = event.getBlockFace();
         Material m = block.getType();
@@ -153,6 +91,10 @@ public class BDPlayerListener extends PlayerListener {
                     plugin.log("Power on " + f + " is " + block.getBlockPower(f));
                 }
             }
+        }
+
+        if (player.getItemInHand().getType() == Material.STICK) {
+            event.setCancelled(true);
         }
 
     }
@@ -227,5 +169,15 @@ public class BDPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+    }
+
+    @Override
+    public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+        plugin.log("Game mode changed for " + event.getPlayer().getName() + " " + event.getPlayer().getGameMode() + " > " + event.getNewGameMode());
+    }
+
+    @Override
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+        plugin.log(event.getPlayer().getName() + " joined " + event.getPlayer().getWorld().getName() + " coming from " + event.getFrom().getName());
     }
 }
